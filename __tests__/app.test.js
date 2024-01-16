@@ -9,17 +9,24 @@ afterAll(() => db.end())
 
 describe('/api/topics', () => {
     test('GET: 200 sends an array of topics to the client', () => {
-        // console.log(testData)
+        
         return request(app)        
             .get('/api/topics')
             .expect(200)
-            .then((response) => {
-                console.log('----> res', response.body)
+            .then((response) => {                
                 expect(response.body.topics.length).toBe(3)
                 response.body.topics.forEach((topic) => {                    
                     expect(typeof topic.description).toBe('string')
                     expect(typeof topic.slug).toBe('string')
                 })
+            })
+    })
+    test.skip('GET: 404 responds with status: error when non-existant dataset requested', () => {
+        return request(app)
+            .get('/api/tropics')
+            .expect(404)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Not found')
             })
     })
 })
