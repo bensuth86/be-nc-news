@@ -1,24 +1,25 @@
 const express = require('express')
 const app = express()
-const {
+const { getApi,
     getApiTopics,
-    getApi
+    getArticleById
     } = require('./controllers/topics-controllers.js')
 
-const { handleCustomErrors,
-        handlePsqlErrors,
-        handleServerErrors
+const { handlePsqlErrors        
         } = require('./errors/index.js')
 
-app.get('/api/topics', getApiTopics)
 app.get('/api', getApi)
+app.get('/api/topics', getApiTopics)
+app.get('/api/articles/:article_id', getArticleById)
 
-app.use(handleCustomErrors)
+//Error handling middleware ...
+
 app.use(handlePsqlErrors)
-app.use(handleServerErrors)
 
-// app.use((req, res, next) => {
-//     res.status(404).send("Not found")
-//   })
+
+app.all('*', (req, res) => {
+    console.log('-----> 404')
+    res.status(404).send({ msg: 'Not found' })
+})
 
 module.exports = app
