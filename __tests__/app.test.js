@@ -7,6 +7,19 @@ const { articleData, commentData, topicData, userData } = require('../db/data/te
 beforeEach(() => seed({ articleData, commentData, topicData, userData }))
 afterAll(() => db.end())
 
+// need test for GET API/
+describe('/api', () => {
+    test('GET: sends endpoints.json object to the client', () =>{
+        return request(app)
+            .get('/api')
+            .expect(200)
+            .then((response) => {
+                console.log(response.body)
+                expect(Object.keys(response.body.endpoints).length).toBe(3)
+            })
+    })
+})
+
 describe('/api/topics', () => {
     test('GET: 200 sends an array of topics to the client', () => {
         
@@ -21,9 +34,38 @@ describe('/api/topics', () => {
                 })
             })
     })
-    test.skip('GET: 404 responds with status: error when non-existant dataset requested', () => {
+    test('GET: responds with 404 status error when non-existant dataset requested', () => {
         return request(app)
             .get('/api/tropics')
+            .expect(404)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Not found')
+            })
+    })
+})
+
+describe('/api/articles/:article_id', () => {
+    test('GET:200 sends a single article response to the client', () => {
+    return request(app)
+        .get('/api/articles/1')
+        .expect(200)
+        .then((response) => {
+            expect(response.body.article.article_id).toBe(1)
+            expect(response.body.article.title).toBe("Living in the shadow of a great man")
+            expect(response.body.article.votes).toBe(100)
+        })
+    })
+    test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
+        return request(app)
+          .get('/api/articles/one')
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+          });
+      });
+    test('GET:404 for id requested out of range', () => {
+        return request(app)
+            .get('/api/articles/9999')
             .expect(404)
             .then((response) => {                
                 expect(response.body.msg).toBe('Not found')
