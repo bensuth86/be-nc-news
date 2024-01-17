@@ -14,7 +14,7 @@ describe('/api', () => {
             .get('/api')
             .expect(200)
             .then((response) => {
-                console.log(response.body)
+                
                 expect(Object.keys(response.body.endpoints).length).toBe(3)
             })
     })
@@ -49,10 +49,14 @@ describe('/api/articles/:article_id', () => {
     return request(app)
         .get('/api/articles/1')
         .expect(200)
-        .then((response) => {
-            expect(response.body.article.article_id).toBe(1)
+        .then((response) => {            
+            expect(response.body.article.article_id).toBe(1)            
             expect(response.body.article.title).toBe("Living in the shadow of a great man")
+            expect(response.body.article.topic).toBe('mitch')
+            expect(response.body.article.author).toBe('butter_bridge')
+            expect(response.body.article.body).toBe('I find this existence challenging')
             expect(response.body.article.votes).toBe(100)
+            
         })
     })
     test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
@@ -71,4 +75,23 @@ describe('/api/articles/:article_id', () => {
                 expect(response.body.msg).toBe('Not found')
             })
     })
+})
+
+describe('/api/articles', () => {
+    test('GET: 200 sends an array of article objects to the client with total comments column', () => {
+        
+        return request(app)        
+            .get('/api/articles')
+            .expect(200)
+            .then((response) => {
+                
+                expect(response.body.articles.length).toBe(13)  
+                // response.body.articles.forEach((artcle) => {
+                //     console.log(artcle)
+                //     expect(typeof article.totalcomments).toBe('number')
+                // })          
+
+            })
+    })
+
 })

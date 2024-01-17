@@ -1,6 +1,7 @@
 const {
     selectTopics,
-    selectArticleById    
+    selectArticleById,
+    selectArticles   
 } = require('../models/topics-models.js')
 
 exports.getApi = (req, res, next) => {
@@ -29,7 +30,19 @@ exports.getArticleById = (req, res, next) => {
         res.status(200).send({ article })
     })
     .catch((err) => {
-        console.log('an error ----->')
+        
+        next(err)
+    })
+}
+
+exports.getApiArticles = (req, res, next) => {
+    
+    selectArticles().then((articles) => {
+        
+        res.status(200).send({ articles })
+    })
+    .catch((err) => {
+       
         next(err)
     })
 }
