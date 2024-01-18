@@ -2,7 +2,8 @@ const {
     selectTopics,
     selectArticleById,
     selectArticles,
-    selectArticle_idComments  
+    selectArticle_idComments,
+    insertCommentByArticleId  
 } = require('../models/topics-models.js')
 
 exports.getApi = (req, res, next) => {
@@ -53,12 +54,26 @@ exports.getArticle_idComments = (req, res, next) => {
     
     const { article_id }  = req.params
 
-    selectArticle_idComments(article_id).then((article) => {
+    selectArticle_idComments(article_id).then((comments) => {
         
-        res.status(200).send({ article }) //array of comments
+        res.status(200).send({ comments }) //array of comments
     })
     .catch((err) => {
         
         next(err)
     })
+}
+
+exports.postCommentToArticleId = (req, res, next) => {
+    
+    const newComment = req.body
+
+    insertCommentByArticleId(newComment).then((comment) => {
+        res.status(200).send({ comment })
+    })
+    .catch((err) => {
+
+        next(err)
+    })
+
 }

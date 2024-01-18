@@ -103,13 +103,15 @@ describe('/api/articles', () => {
 })
 
 describe('/api/articles/:article_id/comments', () => {
-    test.only('GET: 200 response with an array of comments for the given article_id', () => {
+    test('GET: 200 response with an array of comments for given article_id- sorted by date created', () => {
         
         return request(app)        
-            .get('/api/articles/:1/comments')
+            .get('/api/articles/1/comments')
             .expect(200)
-            .then((response) => {                
-                response.body.article.forEach((comment) => {                    
+            .then((response) => {  
+                console.log(response.body)
+                expect(response.body.comments).toBeSortedBy('created_at', { descending: true })              
+                response.body.comments.forEach((comment) => {                    
                     expect(typeof comment.comment_id).toBe('number')
                     expect(typeof comment.votes).toBe('number')
                     expect(typeof comment.created_at).toBe('string')
@@ -119,4 +121,61 @@ describe('/api/articles/:article_id/comments', () => {
                 })
         })
     })
+    test('GET:400 sends an appropriate status and error message when given an invalid id', () => {
+        return request(app)
+          .get('/api/articles/one/comments')
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe('Bad request');
+          });
+      });
+    test('GET:404 for id requested out of range', () => {
+        return request(app)
+            .get('/api/articles/9999/comments')
+            .expect(404)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Not found')
+            })
+    })
+    test.skip('GET:for existing article with no comments return 200 with an empty array', () => {
+        return request(app)
+            .get('/api/articles/2/comments')
+            .expect(200)            
+            .then((response) => {
+                const expected = []         
+                expect(response.body.article).toEqual(expect.arrayContaining(expected))
+            })
+    })
+    
 })
+
+describe.skip('/api/articles/:article_id/comments', () => {
+
+    test('POST:201 add a new comment to comments.js and return back to the client', () => {
+      const newComment = {
+        username: 'Bob',
+        body: 'I love trolls'
+      };
+      return request(app)
+        .post('/api/articles/1/comments')
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+          expect(response.body.username).toBe('Bob');
+          expect(response.body.body).toBe('I love trolls');
+        });
+    });
+    test('POST:400 responds with 400 error message when comment provided in invalid data type or (no object)', () => {
+      
+      return request(app)       
+        .post('/api/articles/1/comments')      
+        .send({
+            username: 'Bob'
+        })
+        .expect(400)      
+        .then((response) => {
+          console.log('res ----->', response.body)
+          expect(response.body.msg).toBe('Bad request');
+        });
+    });
+  });

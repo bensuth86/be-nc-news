@@ -37,9 +37,21 @@ exports.selectArticles = () => {
 
 exports.selectArticle_idComments = (article_id) => {
     
-    return db.query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC ;', [article_id.slice(1)])
+    return db.query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC ;', [article_id])
     .then((result) => {
-        
+        if (result.rows.length === 0) {
+
+            return Promise.reject()
+        }
         return result.rows
     })
+}
+
+exports.insertCommentByArticleId = () => {
+    return db
+        .query()
+        .then((result) => {
+
+            return result.rows
+        })
 }
