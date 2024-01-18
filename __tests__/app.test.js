@@ -97,7 +97,26 @@ describe('/api/articles', () => {
                     expect(typeof artcle.comments).toBe('string')
                 })          
 
-            })
+        })
     })
 
+})
+
+describe('/api/articles/:article_id/comments', () => {
+    test.only('GET: 200 response with an array of comments for the given article_id', () => {
+        
+        return request(app)        
+            .get('/api/articles/:1/comments')
+            .expect(200)
+            .then((response) => {                
+                response.body.article.forEach((comment) => {                    
+                    expect(typeof comment.comment_id).toBe('number')
+                    expect(typeof comment.votes).toBe('number')
+                    expect(typeof comment.created_at).toBe('string')
+                    expect(typeof comment.author).toBe('string')
+                    expect(typeof comment.body).toBe('string')
+                    expect(typeof comment.article_id).toBe('number')
+                })
+        })
+    })
 })

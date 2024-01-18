@@ -8,6 +8,7 @@ exports.selectTopics = () => {
 }
 
 exports.selectArticleById = (article_id) => {
+    
     return db.
         query('SELECT * FROM articles WHERE article_id = $1;', [article_id])
         .then((result) => {
@@ -34,5 +35,11 @@ exports.selectArticles = () => {
     })
 }
 
-// Joins
-// Aggregate functions
+exports.selectArticle_idComments = (article_id) => {
+    
+    return db.query('SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC ;', [article_id.slice(1)])
+    .then((result) => {
+        
+        return result.rows
+    })
+}
