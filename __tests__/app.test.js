@@ -86,10 +86,16 @@ describe('/api/articles', () => {
             .then((response) => {
                 
                 expect(response.body.articles.length).toBe(13)  
-                // response.body.articles.forEach((artcle) => {
-                //     console.log(artcle)
-                //     expect(typeof article.totalcomments).toBe('number')
-                // })          
+                response.body.articles.forEach((artcle) => {
+                    expect(typeof artcle.title).toBe('string')
+                    expect(typeof artcle.topic).toBe('string')
+                    expect(typeof artcle.author).toBe('string')
+                    expect(typeof artcle.body).toBe('string')
+                    expect(typeof artcle.created_at).toBe('string')
+                    expect(typeof artcle.votes).toBe('number')
+                    expect(typeof artcle.article_img_url).toBe('string')                    
+                    expect(typeof artcle.comments).toBe('string')
+                })          
 
             })
     })

@@ -20,7 +20,7 @@ exports.selectArticleById = (article_id) => {
 }
 
 // exports.selectArticles = () => {
-//     return db.query('SELECT *, C.cnt FROM articles LEFT JOIN (SELECT article_id, COUNT(article_id) AS count FROM comments GROUP by article_id) C ON articles.article_id = comments.article_id;')
+//     return db.query('SELECT * FROM articles LEFT JOIN (SELECT article_id, count(article_id) AS totalComments FROM comments GROUP by article_id) AS ctn ON ctn.article_id = articles.article_id;')
                     
 //     .then((result) => {        
 //         return result.rows
@@ -28,9 +28,8 @@ exports.selectArticleById = (article_id) => {
 // }
 
 exports.selectArticles = () => {
-    return db.query('SELECT * FROM articles LEFT JOIN (SELECT article_id, count(article_id) AS totalComments FROM comments GROUP by article_id) AS ctn ON ctn.article_id = articles.article_id;')
-                    
-    .then((result) => {        
+    return db.query('SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id')
+    .then((result) => {
         return result.rows
     })
 }
