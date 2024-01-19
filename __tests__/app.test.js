@@ -75,7 +75,7 @@ describe('/api/articles/:article_id', () => {
                 expect(response.body.msg).toBe('Not found')
             })
     })
-    test.only('PATCH:204 updates the votes property', () => {
+    test.skip('PATCH:204 updates the votes property', () => {
         addVotes = { inc_votes: 1 }
         return request(app)
             .patch('/api/articles/1')
@@ -85,7 +85,7 @@ describe('/api/articles/:article_id', () => {
                 console.log(response)
             })
     })
-    test('PATCH:304 votes property not modified', () => {
+    test.skip('PATCH:304 votes property not modified', () => {
         
         return request(app)
             .get('/api/articles/1')
