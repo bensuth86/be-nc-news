@@ -12,7 +12,7 @@ exports.handlePsqlErrors = (err, req, res, next) => {
 exports.handleServerErrors = (err, req, res, next) => {
     
     if (err){
-      
+    // console.log('---> Server error')    
     res.status(500).send({ msg: 'Internal Server Error' })}
     else next(err)
 }

@@ -10,7 +10,6 @@ exports.getApi = (req, res, next) => {
     const endpoints = require('../endpoints.json')
     res.status(200).send({ endpoints })
     .catch((err) => {
-        
         next(err)
     })
 }
@@ -66,14 +65,15 @@ exports.getArticle_idComments = (req, res, next) => {
 }
 
 exports.postCommentToArticleId = (req, res, next) => {
-        
-    const newComment = {...req.body, ...req.params}  // comment_body, username, article_id       
     
+    const newComment = req.body
+
     insertCommentByArticleId(newComment).then((comment) => {
-        res.status(201).send({ comment })        
-    })    
+        res.status(200).send({ comment })
+    })
     .catch((err) => {
-        
+
         next(err)
     })
+
 }
