@@ -12,6 +12,8 @@ const { handlePsqlErrors,
         handleServerErrors        
         } = require('./errors/index.js')
 
+app.use(express.json());
+
 app.get('/api', getApi)
 app.get('/api/topics', getApiTopics)
 app.get('/api/articles/:article_id', getArticleById)

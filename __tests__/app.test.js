@@ -108,8 +108,7 @@ describe('/api/articles/:article_id/comments', () => {
         return request(app)        
             .get('/api/articles/1/comments')
             .expect(200)
-            .then((response) => {  
-                console.log(response.body)
+            .then((response) => {                  
                 expect(response.body.comments).toBeSortedBy('created_at', { descending: true })              
                 response.body.comments.forEach((comment) => {                    
                     expect(typeof comment.comment_id).toBe('number')
@@ -146,36 +145,38 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(response.body.article).toEqual(expect.arrayContaining(expected))
             })
     })
+    test('POST:201 add a new comment to comments.js and return back to the client', () => {
+        const newComment = {          
+          body: 'I love trolls',
+          username: 'rogersop',
+        }
+        
+        return request(app)
+          .post('/api/articles/1/comments')
+          .send(newComment)
+          .expect(201)
+          .then((response) => {                   
+              expect(response.body.comment.author).toBe('rogersop');
+              expect(response.body.comment.body).toBe('I love trolls');
+          });
+        });
+    test('POST:400 responds with 400 error message when comment provided in invalid data type or (no object)', () => {
+
+        return request(app)       
+            .post('/api/articles/2/comments')      
+            .send({
+                username: 'Bob'
+            })
+            .expect(400)      
+            .then((response) => {
+            
+            expect(response.body.msg).toBe('Bad request');
+            });
+        });
     
 })
 
-describe.skip('/api/articles/:article_id/comments', () => {
+describe('/api/articles/:article_id/comments', () => {
 
-    test('POST:201 add a new comment to comments.js and return back to the client', () => {
-      const newComment = {
-        username: 'Bob',
-        body: 'I love trolls'
-      };
-      return request(app)
-        .post('/api/articles/1/comments')
-        .send(newComment)
-        .expect(201)
-        .then((response) => {
-          expect(response.body.username).toBe('Bob');
-          expect(response.body.body).toBe('I love trolls');
-        });
-    });
-    test('POST:400 responds with 400 error message when comment provided in invalid data type or (no object)', () => {
-      
-      return request(app)       
-        .post('/api/articles/1/comments')      
-        .send({
-            username: 'Bob'
-        })
-        .expect(400)      
-        .then((response) => {
-          console.log('res ----->', response.body)
-          expect(response.body.msg).toBe('Bad request');
-        });
-    });
+
   });
