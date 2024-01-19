@@ -159,7 +159,7 @@ describe('/api/articles/:article_id/comments', () => {
                 expect(response.body.msg).toBe('Not found')
             })
     })
-    test.skip('GET:for existing article with no comments return 200 with an empty array', () => {
+    test('GET:for existing article with no comments return 200 with an empty array', () => {
         return request(app)
             .get('/api/articles/2/comments')
             .expect(200)            

@@ -60,11 +60,14 @@ exports.getApiArticles = (req, res, next) => {
 exports.getArticle_idComments = (req, res, next) => {
     
     const { article_id }  = req.params
-
-    selectArticle_idComments(article_id).then((comments) => {
-        
+    const categoryExistsQuery = checkCategoryExists(article_id)
+    const fetchArticleId = selectArticle_idComments(article_id)
+    Promise.all([fetchArticleId, categoryExistsQuery])
+    .then((response) => { // response - [commentsArray, responsefromcheckcatexists]
+        const comments = response[0]
         res.status(200).send({ comments }) //array of comments
     })
+
     .catch((err) => {
         
         next(err)
@@ -92,7 +95,7 @@ exports.patchVotesArticles = (req, res, next) => {
         res.status(200).send({ updatedRow })
     })
     .catch((err) => {
-        console.log('err---->', err)
+        
         next(err)
 
     })
