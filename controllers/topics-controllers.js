@@ -84,7 +84,7 @@ exports.patchVotesArticles = (req, res, next) => {
     const { votes } = req.body
 
     updateVotesByArticleId(updateVotes).then((votes) => {
-        res.status(204).sed({ votes})
+        res.status(200).send({ votes })
     })
     .catch((err) => {
 
