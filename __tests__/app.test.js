@@ -75,26 +75,27 @@ describe('/api/articles/:article_id', () => {
                 expect(response.body.msg).toBe('Not found')
             })
     })
-    test.skip('PATCH:200 updates the votes property', () => {
-        addVotes = { inc_votes: 1 }
+    test('PATCH:200 updates the votes property', () => {
+        updateVotes = { inc_votes: 1 }
         return request(app)
             .patch('/api/articles/1')
-            .send(addVotes)
+            .send(updateVotes)
             .expect(200)
             .then((response)=>{
-                console.log(response)
+                
+                expect(response.body.updatedRow.article_id).toBe(1)
+                expect(response.body.updatedRow.votes).toBe(1)
             })
     })
-    test.skip('PATCH:304 votes property not modified', () => {
-        addVotes = { votes: 1 }
+    test('PATCH:400 bad article_id', () => {
+        updateVotes = { inc_votes: 1 }
         return request(app)
-            .patch('/api/articles/1')
-            .send()
-            .expect(200)
-            .then((response)=> {
-                // test that articles.votes is not modified if missing the inc_votes key
-                expect(response.body.msg).toBe('Not modified')
-            })
+            .patch('/api/articles/ONE')
+            .send(updateVotes)
+            .expect(400)
+            // .then((response)=> {
+
+            // })
     })
 
 })
