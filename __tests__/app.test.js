@@ -75,6 +75,26 @@ describe('/api/articles/:article_id', () => {
                 expect(response.body.msg).toBe('Not found')
             })
     })
+    test.only('PATCH:204 updates the votes property', () => {
+        addVotes = { inc_votes: 1 }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(addVotes)
+            .expect(204)
+            .then((response)=>{
+                console.log(response)
+            })
+    })
+    test('PATCH:304 votes property not modified', () => {
+        
+        return request(app)
+            .get('/api/articles/1')
+            .expect(304)
+            .then((response)=> {
+                expect(response.body.msg).toBe('Not modified')
+            })
+    })
+
 })
 
 describe('/api/articles', () => {
@@ -173,10 +193,4 @@ describe('/api/articles/:article_id/comments', () => {
             expect(response.body.msg).toBe('Bad request');
             });
         });
-    
 })
-
-describe('/api/articles/:article_id/comments', () => {
-
-
-  });
