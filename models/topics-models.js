@@ -57,3 +57,13 @@ exports.insertCommentByArticleId = ({ body, username, article_id }) => {
             return result.rows[0]
         })
 }
+
+exports.updateVotesByArticleId = ({ inc_votes, article_id }) => {
+
+    return db
+        .query('UPDATE articles SET votes = $1 WHERE article_id = $2 RETURNING *;', [inc_votes, article_id])
+        .then((result) => {
+            console.log('--->result', result)
+            return result.rows[0]
+        })
+}

@@ -81,12 +81,14 @@ exports.postCommentToArticleId = (req, res, next) => {
 
 exports.patchVotesArticles = (req, res, next) => {
 
-    const { votes } = req.body
-
-    updateVotesByArticleId(updateVotes).then((votes) => {
-        res.status(200).send({ votes })
+    const updateVotes = {...req.body, ...req.params}
+    
+    updateVotesByArticleId(updateVotes).then((updatedRow) => {
+        res.status(200).send({ updatedRow })
     })
     .catch((err) => {
+        console.log('err---->', err)
+        next(err)
 
     })
 }
