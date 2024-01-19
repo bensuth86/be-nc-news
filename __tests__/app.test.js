@@ -88,7 +88,7 @@ describe('/api/articles/:article_id', () => {
             })
     })
     test('PATCH:400 bad article_id', () => {
-        updateVotes = { votes: 1 }
+        updateVotes = { inc_votes: 1 }
         return request(app)
             .patch('/api/articles/ONE')
             .send(updateVotes)
@@ -96,17 +96,6 @@ describe('/api/articles/:article_id', () => {
             // .then((response)=> {
 
             // })
-    })
-    test.skip('PATCH:304 votes property not modified', () => {
-        updateVotes = { votes: 1 }
-        return request(app)
-            .patch('/api/articles/1')
-            .send(updateVotes)
-            .expect(200)
-            .then((response)=> {
-                // test that articles.votes is not modified if missing the inc_votes key
-                expect(response.body.msg).toBe('Not modified')
-            })
     })
 
 })

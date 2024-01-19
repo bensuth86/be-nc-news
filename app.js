@@ -10,7 +10,8 @@ const { getApi,
     } = require('./controllers/topics-controllers.js')
 
 const { handlePsqlErrors,
-        handleServerErrors        
+        handleServerErrors,        
+        handle404NotFound
         } = require('./errors/index.js')
 
 app.use(express.json());
@@ -32,7 +33,9 @@ app.all('*', (req, res) => {
 //Error handling middleware ...
 
 app.use(handlePsqlErrors)
+app.use(handle404NotFound)
 app.use(handleServerErrors)
+
 
 
 module.exports = app

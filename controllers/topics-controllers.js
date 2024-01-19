@@ -7,6 +7,8 @@ const {
     updateVotesByArticleId  
 } = require('../models/topics-models.js')
 
+const { checkCategoryExists } = require('../utils/check-cat-exists.js')
+
 exports.getApi = (req, res, next) => {
     const endpoints = require('../endpoints.json')
     res.status(200).send({ endpoints })
@@ -28,10 +30,13 @@ exports.getApiTopics = (req, res, next) => {
 }
 
 exports.getArticleById = (req, res, next) => {    
-    const { article_id } = req.params
-    
-    selectArticleById(article_id).then((article) => {
+    const { article_id } = req.params    
+    const categoryExistsQuery = checkCategoryExists(article_id)
+    const fetchArticleId = selectArticleById(article_id)
+    Promise.all([fetchArticleId, categoryExistsQuery])
+    .then((response) => {  // response - [articlesArray, responsefromcheckcatexists]
         
+        const article = response[0]
         res.status(200).send({ article })
     })
     .catch((err) => {
