@@ -5,7 +5,8 @@ const { getApi,
     getArticleById,
     getApiArticles,
     getArticle_idComments,
-    postCommentToArticleId
+    postCommentToArticleId,
+    patchVotesArticles
     } = require('./controllers/topics-controllers.js')
 
 const { handlePsqlErrors,
@@ -21,6 +22,7 @@ app.get('/api/articles', getApiArticles)
 app.get('/api/articles/:article_id/comments', getArticle_idComments)
 
 app.post('/api/articles/:article_id/comments', postCommentToArticleId)
+app.patch('/api/articles/:article_id', patchVotesArticles)
 
 app.all('*', (req, res) => {
     

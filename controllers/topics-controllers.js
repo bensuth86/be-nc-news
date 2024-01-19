@@ -3,7 +3,8 @@ const {
     selectArticleById,
     selectArticles,
     selectArticle_idComments,
-    insertCommentByArticleId  
+    insertCommentByArticleId,
+    updateVotesByArticleId  
 } = require('../models/topics-models.js')
 
 exports.getApi = (req, res, next) => {
@@ -75,5 +76,17 @@ exports.postCommentToArticleId = (req, res, next) => {
     .catch((err) => {
         
         next(err)
+    })
+}
+
+exports.patchVotesArticles = (req, res, next) => {
+
+    const { votes } = req.body
+
+    updateVotesByArticleId(updateVotes).then((votes) => {
+        res.status(204).sed({ votes})
+    })
+    .catch((err) => {
+
     })
 }
