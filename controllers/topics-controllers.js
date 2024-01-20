@@ -4,10 +4,12 @@ const {
     selectArticles,
     selectArticle_idComments,
     insertCommentByArticleId,
-    updateVotesByArticleId  
+    updateVotesByArticleId,
+    removeCommentById
 } = require('../models/topics-models.js')
 
-const { checkCategoryExists } = require('../utils/check-cat-exists.js')
+const { checkArticleExists } = require('../utils/check-art-exists.js')
+const { checkCommentExists } = require('../utils/check-comment-exists.js')
 
 exports.getApi = (req, res, next) => {
     const endpoints = require('../endpoints.json')
@@ -31,9 +33,9 @@ exports.getApiTopics = (req, res, next) => {
 
 exports.getArticleById = (req, res, next) => {    
     const { article_id } = req.params    
-    const categoryExistsQuery = checkCategoryExists(article_id)
+    const articleExistsQuery = checkArticleExists(article_id)
     const fetchArticleId = selectArticleById(article_id)
-    Promise.all([fetchArticleId, categoryExistsQuery])
+    Promise.all([fetchArticleId, articleExistsQuery])
     .then((response) => {  // response - [articlesArray, responsefromcheckcatexists]
         
         const article = response[0]
@@ -60,9 +62,9 @@ exports.getApiArticles = (req, res, next) => {
 exports.getArticle_idComments = (req, res, next) => {
     
     const { article_id }  = req.params
-    const categoryExistsQuery = checkCategoryExists(article_id)
+    const articleExistsQuery = checkArticleExists(article_id)
     const fetchArticleId = selectArticle_idComments(article_id)
-    Promise.all([fetchArticleId, categoryExistsQuery])
+    Promise.all([fetchArticleId, articleExistsQuery])
     .then((response) => { // response - [commentsArray, responsefromcheckcatexists]
         const comments = response[0]
         res.status(200).send({ comments }) //array of comments
@@ -98,5 +100,22 @@ exports.patchVotesArticles = (req, res, next) => {
         
         next(err)
 
+    })
+}
+
+exports.deleteCommentById = (req, res, next) => {
+
+    const { comment_id }  = req.params
+    
+    const commentExistsQuery = checkCommentExists(comment_id)
+    const deleteCommentId = removeCommentById(comment_id)
+    Promise.all([deleteCommentId, commentExistsQuery])
+    .then((response) => {        
+        const comment = response[0]
+        res.status(204).send({ comment })
+    })
+    .catch((err) => {
+        console.log('err ---->', err)
+        next(err)
     })
 }

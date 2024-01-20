@@ -6,7 +6,8 @@ const { getApi,
     getApiArticles,
     getArticle_idComments,
     postCommentToArticleId,
-    patchVotesArticles
+    patchVotesArticles,
+    deleteCommentById
     } = require('./controllers/topics-controllers.js')
 
 const { handlePsqlErrors,
@@ -24,6 +25,8 @@ app.get('/api/articles/:article_id/comments', getArticle_idComments)
 
 app.post('/api/articles/:article_id/comments', postCommentToArticleId)
 app.patch('/api/articles/:article_id', patchVotesArticles)
+
+app.delete('/api/comments/:comment_id', deleteCommentById)
 
 app.all('*', (req, res) => {
     
