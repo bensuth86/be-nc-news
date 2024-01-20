@@ -21,13 +21,7 @@ exports.selectArticleById = (article_id) => {
     })
 }
 
-// exports.selectArticles = () => {
-//     return db.query('SELECT * FROM articles LEFT JOIN (SELECT article_id, count(article_id) AS totalComments FROM comments GROUP by article_id) AS ctn ON ctn.article_id = articles.article_id;')
-                    
-//     .then((result) => {        
-//         return result.rows
-//     })
-// }
+
 
 exports.selectArticles = () => {
     return db.query('SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id')
@@ -65,3 +59,11 @@ exports.updateVotesByArticleId = ({ inc_votes, article_id }) => {
             return result.rows[0]
         })
 }
+
+exports.removeCommentById = (comment_id) => {
+
+    return db
+        .query('DELETE FROM comments WHERE comment_id = $1;', [comment_id])
+        
+        }
+
