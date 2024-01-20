@@ -7,6 +7,13 @@ exports.selectTopics = () => {
     })
 }
 
+exports.selectUsers = () => {
+    return db.query('SELECT * FROM users;').then((result) => {
+        
+        return result.rows
+    })
+}
+
 exports.selectArticleById = (article_id) => {
     
     return db.

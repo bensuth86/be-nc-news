@@ -1,5 +1,6 @@
 const {
     selectTopics,
+    selectUsers,
     selectArticleById,
     selectArticles,
     selectArticle_idComments,
@@ -24,6 +25,17 @@ exports.getApiTopics = (req, res, next) => {
     
     selectTopics().then((topics) => {
         res.status(200).send({ topics })
+    })
+    .catch((err) => {
+        
+        next(err)
+    })
+}
+
+exports.getApiUsers = (req, res, next) => {
+    
+    selectUsers().then((users) => {
+        res.status(200).send({ users })
     })
     .catch((err) => {
         
@@ -115,7 +127,7 @@ exports.deleteCommentById = (req, res, next) => {
         res.status(204).send({ comment })
     })
     .catch((err) => {
-        console.log('err ---->', err)
+        
         next(err)
     })
 }
