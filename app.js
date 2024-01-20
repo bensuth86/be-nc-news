@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const { getApi,
     getApiTopics,
+    getApiUsers,
     getArticleById,
     getApiArticles,
     getArticle_idComments,
@@ -19,6 +20,8 @@ app.use(express.json());
 
 app.get('/api', getApi)
 app.get('/api/topics', getApiTopics)
+app.get('/api/users', getApiUsers)
+
 app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getApiArticles)
 app.get('/api/articles/:article_id/comments', getArticle_idComments)

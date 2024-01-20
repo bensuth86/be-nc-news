@@ -44,6 +44,31 @@ describe('/api/topics', () => {
     })
 })
 
+describe('/api/users', () => {
+    test('GET: 200 sends an array of users to the client', () => {
+        
+        return request(app)        
+            .get('/api/users')
+            .expect(200)
+            .then((response) => {                
+                expect(response.body.users.length).toBe(4)
+                response.body.users.forEach((user) => {                    
+                    expect(typeof user.username).toBe('string')
+                    expect(typeof user.name).toBe('string')
+                    expect(typeof user.avatar_url).toBe('string')
+                })
+            })
+    })
+    test('GET: responds with 404 status error when non-existant dataset requested', () => {
+        return request(app)
+            .get('/api/non-user')
+            .expect(404)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Not found')
+            })
+    })
+})
+
 describe('/api/articles/:article_id', () => {
     test('GET:200 sends a single article response to the client', () => {
     return request(app)
