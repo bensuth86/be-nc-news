@@ -150,6 +150,27 @@ describe('/api/articles', () => {
 
 })
 
+describe('/api/articles/topic', () => {
+    test('GET: 200 sends an array of articles filtered by topic query', () => {
+
+        return request(app)
+            .get('/api/articles?topic=cats')
+            .expect(200)
+            .then((response) => {
+                // console.log(response.body)
+                expect(response.body.articles.length).toBe(1)
+            })
+    })
+    test('GET:400 if non-existent topic queried', () => {
+        return request(app)
+            .get('/api/articles/dogs')
+            .expect(400)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Bad request')
+            })
+    })
+})
+
 describe('/api/articles/:article_id/comments', () => {
     test('GET: 200 response with an array of comments for given article_id- sorted by date created', () => {
         
@@ -248,3 +269,4 @@ describe('/api/comments/:comment_id', () => {
       });
 
 })
+
