@@ -8,7 +8,8 @@ const { getApi,
     getArticle_idComments,
     postCommentToArticleId,
     patchVotesArticles,
-    deleteCommentById
+    deleteCommentById,
+    getApiArticlesFiltered
     } = require('./controllers/topics-controllers.js')
 
 const { handlePsqlErrors,

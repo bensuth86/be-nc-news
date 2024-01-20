@@ -4,6 +4,7 @@ const {
     selectArticleById,
     selectArticles,
     selectArticle_idComments,
+    selectArticlesFiltered,
     insertCommentByArticleId,
     updateVotesByArticleId,
     removeCommentById
@@ -60,13 +61,16 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getApiArticles = (req, res, next) => {
+
     
-    selectArticles().then((articles) => {
+    const { topic } = req.query
+
+    selectArticles(topic).then((articles) => {
         
         res.status(200).send({ articles })
     })
     .catch((err) => {
-        
+        console.log('err---->', err)
         next(err)
     })
 }

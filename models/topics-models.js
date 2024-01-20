@@ -28,10 +28,13 @@ exports.selectArticleById = (article_id) => {
     })
 }
 
+exports.selectArticles = (topic) => {
+    
+    if (topic === undefined){
+        topic = '%'
+    }
 
-
-exports.selectArticles = () => {
-    return db.query('SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id')
+    return db.query('SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id WHERE topic LIKE $1 GROUP BY articles.article_id', [topic] )
     .then((result) => {
         return result.rows
     })
