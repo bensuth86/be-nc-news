@@ -30,14 +30,23 @@ exports.selectArticleById = (article_id) => {
 
 exports.selectArticles = (topic) => {
     
-    if (topic === undefined){
-        topic = '%'
+    const queryValues = []
+    let queryStr = 'SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id'
+
+    if (topic) {
+        queryValues.push(topic)
+        queryStr += ' WHERE topic = $1'
     }
 
-    return db.query('SELECT articles.*, COUNT(comments.article_id) AS comments FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id WHERE topic LIKE $1 GROUP BY articles.article_id', [topic] )
+    // include code for second optional query value (see https://notes.northcoders.com/courses/js-back-end/complex-queries)
+
+    queryStr += ' GROUP BY articles.article_id'
+
+    return db.query(queryStr, queryValues)
     .then((result) => {
         return result.rows
     })
+
 }
 
 exports.selectArticle_idComments = (article_id) => {

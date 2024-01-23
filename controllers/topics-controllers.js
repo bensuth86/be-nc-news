@@ -62,7 +62,6 @@ exports.getArticleById = (req, res, next) => {
 }
 
 exports.getApiArticles = (req, res, next) => {
-
     
     const { topic } = req.query
 

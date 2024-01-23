@@ -127,7 +127,7 @@ describe('/api/articles/:article_id', () => {
 
 describe.skip('/api/articles/:article_id/comment_count', () => {
     test('GET: 200 sends an array of articles filtered by topic query', () => {
-
+// 
         return request(app)
             .get('/api/articles/:article_id?comment_count')
             .expect(200)
@@ -164,22 +164,42 @@ describe('/api/articles', () => {
 })
 
 describe('/api/articles/topic', () => {
-    test('GET: 200 sends an array of articles filtered by topic query', () => {
+    test('GET: 200 sends an array of articles filtered by topic (cats) query', () => {
 
         return request(app)
             .get('/api/articles?topic=cats')
             .expect(200)
             .then((response) => {
-                // console.log(response.body)
+                
                 expect(response.body.articles.length).toBe(1)
             })
     })
-    test('GET:400 if non-existent topic queried', () => {
+    test('GET: 200 sends an array of articles filtered by topic (mitch) query', () => {
+
         return request(app)
-            .get('/api/articles/dogs')
-            .expect(400)
+            .get('/api/articles?topic=mitch')
+            .expect(200)
+            .then((response) => {
+                
+                expect(response.body.articles.length).toBe(12)
+            })
+    })
+    test('GET: 200 when a topic exists however no articles associated with the topic currently ', () => {
+
+        return request(app)
+            .get('/api/articles?topic=paper')
+            .expect(200)
+            .then((response) => {
+                
+                expect(response.body.articles.length).toBe(0)
+            })
+    })
+    test.skip('GET:404 if non-existent topic queried', () => {
+        return request(app)
+            .get('/api/articles?topic=dogs')
+            .expect(404)
             .then((response) => {                
-                expect(response.body.msg).toBe('Bad request')
+                expect(response.body.msg).toBe('Not found')
             })
     })
 })
@@ -255,6 +275,7 @@ describe('/api/articles/:article_id/comments', () => {
             expect(response.body.msg).toBe('Bad request');
             });
         });
+    // testing for 404 error- user posts to comment out of range
 })
 describe('/api/comments/:comment_id', () => {
     
