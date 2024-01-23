@@ -125,6 +125,19 @@ describe('/api/articles/:article_id', () => {
 
 })
 
+describe.skip('/api/articles/:article_id/comment_count', () => {
+    test('GET: 200 sends an array of articles filtered by topic query', () => {
+
+        return request(app)
+            .get('/api/articles/:article_id?comment_count')
+            .expect(200)
+            .then((response) => {
+                // console.log(response.body)
+                expect(response.body.articles.length).toBe(1)
+            })
+    })
+})
+
 describe('/api/articles', () => {
     test('GET: 200 sends an array of article objects to the client with total comments column', () => {
         

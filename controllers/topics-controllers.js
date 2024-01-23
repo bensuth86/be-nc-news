@@ -45,7 +45,8 @@ exports.getApiUsers = (req, res, next) => {
 }
 
 exports.getArticleById = (req, res, next) => {    
-    const { article_id } = req.params    
+    const { article_id } = req.params
+        
     const articleExistsQuery = checkArticleExists(article_id)
     const fetchArticleId = selectArticleById(article_id)
     Promise.all([fetchArticleId, articleExistsQuery])
