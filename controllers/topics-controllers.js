@@ -4,14 +4,13 @@ const {
     selectArticleById,
     selectArticles,
     selectArticle_idComments,
-    selectArticlesFiltered,
     insertCommentByArticleId,
     updateVotesByArticleId,
     removeCommentById
 } = require('../models/topics-models.js')
 
-const { checkArticleExists } = require('../utils/check-art-exists.js')
-const { checkCommentExists } = require('../utils/check-comment-exists.js')
+const { checkArticleExists, checkCommentExists } = require('../utils/check-key-exists.js')
+
 
 exports.getApi = (req, res, next) => {
     const endpoints = require('../endpoints.json')
@@ -70,7 +69,7 @@ exports.getApiArticles = (req, res, next) => {
         res.status(200).send({ articles })
     })
     .catch((err) => {
-        console.log('err---->', err)
+        
         next(err)
     })
 }
@@ -109,14 +108,26 @@ exports.patchVotesArticles = (req, res, next) => {
 
     const updateVotes = {...req.body, ...req.params}
     
-    updateVotesByArticleId(updateVotes).then((updatedRow) => {
-        res.status(200).send({ updatedRow })
+    const articleExistsQuery = checkArticleExists(updateVotes.article_id)
+    const fetchArticleId = updateVotesByArticleId(updateVotes)
+    Promise.all([fetchArticleId, articleExistsQuery])
+    .then((response) => { // response - [articlesArray, responsefromcheckcatexists]
+        const articles = response[0]
+        res.status(200).send({ articles }) //modified articles array 
     })
+
     .catch((err) => {
         
         next(err)
-
     })
+    // updateVotesByArticleId(updateVotes).then((updatedRow) => {
+    //     res.status(200).send({ updatedRow })
+    // })
+    // .catch((err) => {
+        
+    //     next(err)
+
+    // })
 }
 
 exports.deleteCommentById = (req, res, next) => {

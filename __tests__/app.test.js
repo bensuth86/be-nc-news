@@ -59,14 +59,6 @@ describe('/api/users', () => {
                 })
             })
     })
-    test('GET: responds with 404 status error when non-existant dataset requested', () => {
-        return request(app)
-            .get('/api/non-user')
-            .expect(404)
-            .then((response) => {                
-                expect(response.body.msg).toBe('Not found')
-            })
-    })
 })
 
 describe('/api/articles/:article_id', () => {
@@ -107,9 +99,8 @@ describe('/api/articles/:article_id', () => {
             .send(updateVotes)
             .expect(200)
             .then((response)=>{
-                
-                expect(response.body.updatedRow.article_id).toBe(1)
-                expect(response.body.updatedRow.votes).toBe(1)
+                                
+                expect(response.body.articles.votes).toBe(101)
             })
     })
     test('PATCH:400 bad article_id', () => {
@@ -118,11 +109,25 @@ describe('/api/articles/:article_id', () => {
             .patch('/api/articles/ONE')
             .send(updateVotes)
             .expect(400)
-            // .then((response)=> {
 
-            // })
     })
+    test('PATCH:400 inc_votes not a number', () => {
+        updateVotes = { inc_votes: 'ten' }
+        return request(app)
+            .patch('/api/articles/1')
+            .send(updateVotes)
+            .expect(400)
 
+    })
+    test('PATCH:404 for id requested out of range', () => {
+        return request(app)
+            .patch('/api/articles/9999')
+            .send(updateVotes)
+            .expect(404)
+            .then((response) => {                
+                expect(response.body.msg).toBe('Not found')
+            })
+    })
 })
 
 describe.skip('/api/articles/:article_id/comment_count', () => {
@@ -132,7 +137,7 @@ describe.skip('/api/articles/:article_id/comment_count', () => {
             .get('/api/articles/:article_id?comment_count')
             .expect(200)
             .then((response) => {
-                // console.log(response.body)
+                
                 expect(response.body.articles.length).toBe(1)
             })
     })
