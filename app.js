@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const { getApi,
     getApiTopics,
     getApiUsers,
@@ -11,12 +12,12 @@ const { getApi,
     deleteCommentById,
     getApiArticlesFiltered
     } = require('./controllers/topics-controllers.js')
-
 const { handlePsqlErrors,
         handleServerErrors,        
         handle404NotFound
         } = require('./errors/index.js')
 
+app.use(cors())
 app.use(express.json());
 
 app.get('/api', getApi)
